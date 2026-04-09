@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TearMate — Find someone to cry with</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #7c5cbf;
+    --purple-light: #a98fd4;
+    --purple-soft: #f0ebfa;
+    --cream: #faf8f5;
+    --dark: #1a1523;
+    --muted: #8a7f99;
+    --border: #e8e2f0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Floating hearts background */
+  .hearts-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .heart {
+    position: absolute;
+    opacity: 0;
+    animation: floatUp linear infinite;
+    font-size: 1.2rem;
+    filter: blur(0.5px);
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.15; }
+    90% { opacity: 0.1; }
+    100% { transform: translateY(-20vh) rotate(20deg); opacity: 0; }
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(250, 248, 245, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .logo span { font-size: 1.2rem; }
+
+  .nav-cta {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .nav-cta:hover { background: var(--purple-light); transform: translateY(-1px); }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--purple-soft);
+    color: var(--purple);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.8s ease both;
+  }
+
+  .hero-emoji {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    animation: fadeIn 0.8s 0.1s ease both, pulse 3s ease-in-out infinite;
+    display: block;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1.1;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    animation: fadeIn 0.8s 0.2s ease both;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--purple);
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: fadeIn 0.8s 0.3s ease both;
+  }
+
+  .builder-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    animation: fadeIn 0.8s 0.35s ease both;
+    font-style: italic;
+  }
+
+  /* Waitlist form */
+  .waitlist {
+    display: flex;
+    gap: 0.75rem;
+    animation: fadeIn 0.8s 0.4s ease both;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .waitlist input {
+    padding: 0.85rem 1.25rem;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    background: white;
+    color: var(--dark);
+    outline: none;
+    width: 280px;
+    transition: border-color 0.2s;
+  }
+
+  .waitlist input:focus { border-color: var(--purple); }
+  .waitlist input::placeholder { color: #bbb; }
+
+  .waitlist button {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 0.85rem 1.75rem;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .waitlist button:hover { background: var(--purple-light); transform: translateY(-1px); }
+
+  .launch-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    animation: fadeIn 0.8s 0.5s ease both;
+  }
+
+  .launch-note strong { color: var(--purple); }
+
+  /* What is section */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple-light);
+    margin-bottom: 1rem;
+  }
+
+  .section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+  }
+
+  .section p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 600px;
+    font-weight: 300;
+  }
+
+  /* Cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-top: 3rem;
+  }
+
+  .card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(124, 92, 191, 0.1); }
+
+  .card-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+
+  .card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* How it works */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .step {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--purple-soft);
+    color: var(--purple);
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-text h4 {
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+    font-size: 1rem;
+  }
+
+  .step-text p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Divider */
+  .divider {
+    width: 60px;
+    height: 1.5px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* Founder note */
+  .founder {
+    position: relative;
+    z-index: 1;
+    background: var(--dark);
+    color: white;
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  .founder blockquote {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 680px;
+    margin: 0 auto 2rem;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .founder-credit {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* CTA bottom */
+  .cta-bottom {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  .cta-bottom h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .cta-bottom p {
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--purple); }
+
+  /* Success message */
+  .success {
+    display: none;
+    color: var(--purple);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .waitlist { flex-direction: column; align-items: center; }
+    .waitlist input { width: 100%; max-width: 320px; }
+    .waitlist button { width: 100%; max-width: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating hearts -->
+<div class="hearts-bg" id="hearts"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="logo"><span>💜</span> TearMate</div>
+  <a href="#waitlist" class="nav-cta">Get early access</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-tag">Coming to iOS · 3 days</div>
+  <span class="hero-emoji">💜</span>
+  <h1>Find someone to<br><em>cry with</em></h1>
+  <p class="hero-sub">Not a therapist. Not a hotline. Just a kind, compassionate person who will sit with you while you cry. No advice. No judgment. Just presence.</p>
+  <p class="builder-note">Built by a lonely, anxious, depressed man</p>
+
+  <div class="waitlist" id="waitlist">
+    <input type="email" id="emailInput" placeholder="Your email address" />
+    <button onclick="handleSubmit()">Notify me at launch 💜</button>
+  </div>
+  <p class="success" id="successMsg">💜 You're on the list! We'll reach out when TearMate goes live.</p>
+  <p class="launch-note">iOS launching soon · <strong>$5 per session</strong> · Not for profit — to keep it genuine</p>
+</section>
+
+<!-- What is it -->
+<section class="section">
+  <p class="section-label">What is TearMate?</p>
+  <h2>Sometimes you just need someone to be there.</h2>
+  <p>Therapy is for healing. Friends are for celebrating. TearMate is for those quiet, heavy moments when you just need another human being to sit with you — no fixing required.</p>
+
+  <div class="cards">
+    <div class="card">
+      <span class="card-icon">🤝</span>
+      <h3>Real people</h3>
+      <p>Connect with compassionate volunteers in your area who genuinely want to help.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🛡️</span>
+      <h3>Safe & genuine</h3>
+      <p>$5 per session keeps it real. Not to make money — just to keep out the time wasters.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">⭐</span>
+      <h3>Rated & reviewed</h3>
+      <p>Every helper is rated by the community. You can read reviews before you book.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📍</span>
+      <h3>Near you</h3>
+      <p>Find people nearby. Filter by distance. See who's available right now.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- How it works -->
+<section class="section">
+  <p class="section-label">How it works</p>
+  <h2>Three steps to not being alone.</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <h4>Open the app</h4>
+        <p>Sign up with your phone number. Takes 30 seconds. No profile photo required.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <h4>Find a helper nearby</h4>
+        <p>Browse compassionate people in your area. Read their reviews. See their availability.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <h4>Book a session for $5</h4>
+        <p>That's it. A real human shows up for you. No advice unless you ask. Just presence.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">💜</div>
+      <div class="step-text">
+        <h4>Want to be a helper?</h4>
+        <p>If you're a good listener and want to help others, sign up as a helper in the app. Make someone's day a little less lonely.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Founder note -->
+<div class="founder">
+  <blockquote>"I'm 35 years old with no friends, no close family, no relationship. I built this because I needed it myself."</blockquote>
+  <p class="founder-credit">— Hareesh, founder of TearMate</p>
+</div>
+
+<!-- Bottom CTA -->
+<section class="cta-bottom">
+  <h2>You don't have to cry alone.</h2>
+  <p>Join the waitlist. We'll let you know the moment TearMate is live on iOS.</p>
+  <div class="waitlist">
+    <input type="email" id="emailInput2" placeholder="Your email address" />
+    <button onclick="handleSubmit2()">I'm in 💜</button>
+  </div>
+  <p class="success" id="successMsg2">💜 You're on the list!</p>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>💜 TearMate · Built with care · hareesh.io@proton.me &nbsp;|&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="refund.html">Refund Policy</a></p>
+</footer>
+
+<script>
+  // Floating hearts
+  const heartsContainer = document.getElementById('hearts');
+  const heartChars = ['💜', '🤍', '💙', '🩵'];
+
+  for (let i = 0; i < 18; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+    heart.style.animationDuration = (12 + Math.random() * 20) + 's';
+    heart.style.animationDelay = (Math.random() * 15) + 's';
+    heartsContainer.appendChild(heart);
+  }
+
+  function handleSubmit() {
+    const email = document.getElementById('emailInput').value;
+    if (!email || !email.includes('@')) {
+      document.getElementById('emailInput').focus();
+      return;
+    }
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('emailInput').value = '';
+  }
+
+  function handleSubmit2() {
+    const email = document.getElementById('emailInput2').value;
+    if (!email || !email.includes('@')) {
+      document.getElementById('emailInput2').focus();
+      return;
+    }
+    document.getElementById('successMsg2').style.display = 'block';
+    document.getElementById('emailInput2').value = '';
+  }
+
+  document.getElementById('emailInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSubmit();
+  });
+  document.getElementById('emailInput2').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSubmit2();
+  });
+</script>
+</body>
+</html>
