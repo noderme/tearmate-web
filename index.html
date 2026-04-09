@@ -549,25 +549,23 @@
     heartsContainer.appendChild(heart);
   }
 
-  function handleSubmit() {
-    const email = document.getElementById('emailInput').value;
-    if (!email || !email.includes('@')) {
-      document.getElementById('emailInput').focus();
-      return;
-    }
-    document.getElementById('successMsg').style.display = 'block';
-    document.getElementById('emailInput').value = '';
+  async function submitEmail(emailId, successId) {
+    const input = document.getElementById(emailId);
+    const email = input.value;
+    if (!email || !email.includes('@')) { input.focus(); return; }
+
+    await fetch('https://formspree.io/f/xzdkqkyr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    document.getElementById(successId).style.display = 'block';
+    input.value = '';
   }
 
-  function handleSubmit2() {
-    const email = document.getElementById('emailInput2').value;
-    if (!email || !email.includes('@')) {
-      document.getElementById('emailInput2').focus();
-      return;
-    }
-    document.getElementById('successMsg2').style.display = 'block';
-    document.getElementById('emailInput2').value = '';
-  }
+  function handleSubmit() { submitEmail('emailInput', 'successMsg'); }
+  function handleSubmit2() { submitEmail('emailInput2', 'successMsg2'); }
 
   document.getElementById('emailInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') handleSubmit();
