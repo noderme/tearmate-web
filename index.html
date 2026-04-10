@@ -288,6 +288,48 @@
     font-weight: 300;
   }
 
+  /* Why TearMate */
+  .why-body {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    max-width: 600px;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+  }
+
+  .why-founder-block {
+    border-left: 3px solid var(--purple-light);
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .why-founder-text {
+    color: var(--dark);
+    font-size: 1rem;
+    line-height: 1.8;
+    font-weight: 300;
+    max-width: 580px;
+  }
+
+  .why-founder-text em {
+    font-style: italic;
+    color: var(--purple);
+  }
+
+  .why-tried {
+    font-style: italic;
+    color: var(--purple-light) !important;
+  }
+
+  .why-founder-sig {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
   /* How it works */
   .steps {
     display: flex;
@@ -478,6 +520,24 @@
 
 <div class="divider"></div>
 
+<!-- Why TearMate -->
+<section class="section why-section">
+  <p class="section-label">Why TearMate?</p>
+  <h2>You've done it alone.</h2>
+
+  <div class="why-founder-block">
+    <p class="why-founder-text">Crying is not weakness. It is necessary. It is natural — for men and women alike. We were just socially conditioned to stop, somewhere between childhood and being called grown.</p>
+    <p class="why-founder-text">And even when there <em>is</em> someone — a therapist, a friend, family — you don't say everything. Because you'll see them again. Because you don't want to look broken. Because the guilt comes later.</p>
+    <p class="why-founder-text">With a stranger who genuinely wants to listen, you can say it all. And walk away lighter.</p>
+    <p class="why-founder-text">My goal is simple: help people find someone they can share anything with and cry. Not fix. Not judge. Just <em>be there</em>.</p>
+    <p class="why-founder-text">Because crying releases oxytocin and endorphins, lowers cortisol, and genuinely helps your nervous system recover. Science agrees. Your body already knew.</p>
+    <p class="why-founder-text why-tried">I tried. I wish it works for you too.</p>
+    <p class="why-founder-sig">— The founder</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- How it works -->
 <section class="section">
   <p class="section-label">How it works</p>
@@ -524,7 +584,7 @@
 <!-- Bottom CTA -->
 <section class="cta-bottom">
   <h2>Crying is healthy. Do it with someone.</h2>
-  <p>Science shows crying releases oxytocin and endorphins, reduces cortisol levels, and genuinely lowers anxiety and depression. You shouldn't have to do it alone.</p>
+  <p>Science shows crying releases oxytocin and endorphins, reduces cortisol levels, and genuinely lowers anxiety and depression.</p>
   <p>Join the waitlist. We'll let you know the moment TearMate is live on iOS.</p>
   <div class="waitlist">
     <input type="email" id="emailInput2" placeholder="Your email address" />
