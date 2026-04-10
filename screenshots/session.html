@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Session</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .phone { width: 393px; height: 852px; background: #f5f5f7; border-radius: 50px; border: 10px solid #1a1a1a; overflow: hidden; position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.6); }
+  .status-bar { background: white; padding: 14px 28px 8px; display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; }
+
+  .header { background: white; padding: 8px 20px 12px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e8e2f0; }
+  .back { font-size: 22px; color: #7c5cbf; }
+  .header-title { font-size: 17px; font-weight: 600; color: #1a1523; flex: 1; text-align: center; }
+
+  .scroll { overflow-y: auto; height: calc(100% - 100px); padding-bottom: 20px; }
+
+  /* Live indicator */
+  .live-badge {
+    background: #34c759;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 100px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+  }
+  .live-dot { width: 6px; height: 6px; background: white; border-radius: 50%; animation: pulse 1.2s infinite; }
+
+  /* Timer */
+  .timer-block {
+    background: white;
+    padding: 28px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .timer-label { font-size: 12px; color: #8a7f99; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+  .timer { font-size: 52px; font-weight: 700; color: #7c5cbf; letter-spacing: -2px; }
+  .timer-sub { font-size: 13px; color: #8a7f99; }
+
+  /* People */
+  .people-row {
+    background: white;
+    margin: 0 16px 8px;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .person-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: white;
+    position: relative; flex-shrink: 0;
+  }
+  .online-dot { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background: #34c759; border-radius: 50%; border: 2px solid white; }
+  .person-info { flex: 1; }
+  .person-name { font-size: 15px; font-weight: 600; color: #1a1523; }
+  .person-role { font-size: 12px; color: #8a7f99; margin-top: 2px; }
+  .with-label { font-size: 13px; color: #8a7f99; flex-shrink: 0; }
+  .connector { width: 24px; height: 1.5px; background: #e8e2f0; flex-shrink: 0; }
+
+  /* Actions */
+  .section { background: white; margin: 0 16px 8px; border-radius: 16px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .section-title { font-size: 15px; font-weight: 600; color: #1a1523; margin-bottom: 12px; }
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .action-btn {
+    border: 1.5px solid #e8e2f0;
+    border-radius: 14px;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: #fafafa;
+  }
+  .action-icon { font-size: 24px; }
+  .action-label { font-size: 12px; font-weight: 500; color: #1a1523; text-align: center; }
+
+  /* Safety */
+  .safety-card {
+    background: #f0ebfa;
+    margin: 0 16px 8px;
+    border-radius: 16px;
+    padding: 14px 16px;
+    border: 1px solid #d8cfef;
+  }
+  .safety-text { font-size: 13px; color: #7c5cbf; line-height: 20px; }
+
+  /* End session */
+  .footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid #e8e2f0;
+    padding: 16px 20px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .end-btn {
+    background: #ff3b30;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+  }
+  .footer-note { font-size: 11px; color: #8a7f99; text-align: center; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar"><span>9:41</span><span>●●●</span><span>⬛ 100%</span></div>
+  <div class="header">
+    <span class="back">←</span>
+    <span class="header-title">Active Session</span>
+    <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+  </div>
+
+  <div class="scroll">
+    <!-- Timer -->
+    <div class="timer-block">
+      <div class="timer-label">Session in progress</div>
+      <div class="timer">23:47</div>
+      <div class="timer-sub">James is with you · session started 9:17 AM</div>
+    </div>
+
+    <!-- People -->
+    <div class="people-row">
+      <div class="person-avatar" style="background:#a98fd4;">S<div class="online-dot"></div></div>
+      <div class="person-info">
+        <div class="person-name">You (Sarah)</div>
+        <div class="person-role">Seeker</div>
+      </div>
+      <div class="connector"></div>
+      <div class="with-label">with</div>
+      <div class="connector"></div>
+      <div class="person-info" style="text-align:right;">
+        <div class="person-name">James M.</div>
+        <div class="person-role">Helper · 0.4km</div>
+      </div>
+      <div class="person-avatar" style="background:#7c5cbf;">JM<div class="online-dot"></div></div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="section">
+      <div class="section-title">Quick Actions</div>
+      <div class="action-grid">
+        <div class="action-btn">
+          <div class="action-icon">💬</div>
+          <div class="action-label">Chat with James</div>
+        </div>
+        <div class="action-btn">
+          <div class="action-icon">📍</div>
+          <div class="action-label">Share my location</div>
+        </div>
+        <div class="action-btn">
+          <div class="action-icon">⚠️</div>
+          <div class="action-label">Report issue</div>
+        </div>
+        <div class="action-btn">
+          <div class="action-icon">🆘</div>
+          <div class="action-label">Crisis helpline</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Safety reminder -->
+    <div class="safety-card">
+      <div class="safety-text">💜 Stay in a public place. Trust your instincts — if something feels wrong, you can end the session anytime.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="end-btn">End Session</button>
+    <div class="footer-note">Your helper will be paid $5 when you end the session</div>
+  </div>
+</div>
+</body>
+</html>

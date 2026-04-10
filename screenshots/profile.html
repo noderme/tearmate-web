@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helper Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .phone { width: 393px; height: 852px; background: #f5f5f7; border-radius: 50px; border: 10px solid #1a1a1a; overflow: hidden; position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.6); }
+  .status-bar { background: white; padding: 14px 28px 8px; display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; }
+
+  .header { background: white; padding: 8px 20px 12px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e8e2f0; }
+  .back { font-size: 22px; color: #7c5cbf; }
+  .header-title { font-size: 17px; font-weight: 600; color: #1a1523; flex: 1; text-align: center; }
+  .report { font-size: 20px; }
+
+  .scroll { overflow-y: auto; height: calc(100% - 100px); }
+
+  .hero { background: white; padding: 28px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .avatar { width: 96px; height: 96px; border-radius: 50%; background: #7c5cbf; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: white; position: relative; }
+  .online-dot { position: absolute; bottom: 4px; right: 4px; width: 16px; height: 16px; background: #34c759; border-radius: 50%; border: 3px solid white; }
+  .name { font-size: 24px; font-weight: 700; color: #1a1523; margin-top: 8px; }
+  .stars { color: #f59e0b; font-size: 18px; }
+  .rating-label { font-size: 13px; color: #8a7f99; }
+  .stats { display: flex; gap: 24px; background: #f5f5f7; border-radius: 16px; padding: 16px 24px; margin-top: 8px; }
+  .stat { text-align: center; }
+  .stat-val { font-size: 20px; font-weight: 700; color: #1a1523; }
+  .stat-label { font-size: 11px; color: #8a7f99; }
+  .divider { width: 1px; background: #e8e2f0; }
+
+  .section { background: white; border-radius: 16px; margin: 0 16px 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .section-title { font-size: 16px; font-weight: 600; color: #1a1523; margin-bottom: 12px; }
+  .bio { font-size: 14px; color: #8a7f99; line-height: 22px; }
+
+  .slots { display: flex; gap: 10px; }
+  .slot { padding: 10px 14px; border-radius: 12px; border: 1.5px solid #e8e2f0; text-align: center; }
+  .slot.selected { border-color: #7c5cbf; background: #f0ebfa; }
+  .slot-date { font-size: 11px; color: #8a7f99; }
+  .slot-time { font-size: 13px; font-weight: 600; color: #1a1523; }
+  .slot.selected .slot-date, .slot.selected .slot-time { color: #7c5cbf; }
+
+  .review { padding-bottom: 12px; border-bottom: 1px solid #f0ebfa; margin-bottom: 12px; }
+  .review-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .review-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; }
+  .review-name { font-size: 13px; font-weight: 600; color: #1a1523; }
+  .review-stars { font-size: 11px; color: #f59e0b; }
+  .review-text { font-size: 13px; color: #8a7f99; line-height: 19px; }
+
+  .footer { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e8e2f0; padding: 16px 20px 36px; display: flex; align-items: center; gap: 16px; }
+  .price { text-align: center; }
+  .price-amount { font-size: 28px; font-weight: 700; color: #7c5cbf; }
+  .price-label { font-size: 11px; color: #8a7f99; }
+  .book-btn { flex: 1; background: #7c5cbf; color: white; border: none; padding: 14px; border-radius: 14px; font-size: 16px; font-weight: 600; font-family: 'DM Sans', sans-serif; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar"><span>9:41</span><span>●●●</span><span>⬛ 100%</span></div>
+  <div class="header">
+    <span class="back">←</span>
+    <span class="header-title">Helper Profile</span>
+    <span class="report">⚠️</span>
+  </div>
+
+  <div class="scroll">
+    <div class="hero">
+      <div class="avatar">JM<div class="online-dot"></div></div>
+      <div class="name">James Mitchell</div>
+      <div class="stars">★★★★★</div>
+      <div class="rating-label">4.9 · 47 reviews</div>
+      <div class="stats">
+        <div class="stat"><div class="stat-val">52</div><div class="stat-label">sessions</div></div>
+        <div class="divider"></div>
+        <div class="stat"><div class="stat-val">98%</div><div class="stat-label">response</div></div>
+        <div class="divider"></div>
+        <div class="stat"><div class="stat-val">0.4km</div><div class="stat-label">away</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">About</div>
+      <div class="bio">I've been through dark times myself and know how much it helps to have someone just sit with you. I'm a good listener — no advice unless you ask, no judgment, ever. I'll bring coffee ☕</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Available times</div>
+      <div class="slots">
+        <div class="slot selected">
+          <div class="slot-date">Today</div>
+          <div class="slot-time">2:00–3:00</div>
+        </div>
+        <div class="slot">
+          <div class="slot-date">Today</div>
+          <div class="slot-time">5:00–6:00</div>
+        </div>
+        <div class="slot">
+          <div class="slot-date">Tomorrow</div>
+          <div class="slot-time">10:00–11:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Reviews (47)</div>
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar" style="background:#a98fd4;">S</div>
+          <div><div class="review-name">Sarah K.</div><div class="review-stars">★★★★★</div></div>
+        </div>
+        <div class="review-text">James was exactly what I needed. He just listened and didn't try to fix anything. I felt so much better after. Thank you 💜</div>
+      </div>
+      <div class="review">
+        <div class="review-header">
+          <div class="review-avatar" style="background:#6b5ca5;">M</div>
+          <div><div class="review-name">Marcus T.</div><div class="review-stars">★★★★★</div></div>
+        </div>
+        <div class="review-text">Showed up on time, was warm and genuine. Didn't feel awkward at all. Would book again.</div>
+      </div>
+    </div>
+    <div style="height:120px"></div>
+  </div>
+
+  <div class="footer">
+    <div class="price"><div class="price-amount">$5</div><div class="price-label">per session</div></div>
+    <button class="book-btn">Book this slot</button>
+  </div>
+</div>
+</body>
+</html>
