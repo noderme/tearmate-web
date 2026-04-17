@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Withly — You shouldn't have to go through this alone</title>
+<title>Withly — Find someone to be with you</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,7 +28,6 @@
     overflow-x: hidden;
   }
 
-  /* Floating hearts background */
   .hearts-bg {
     position: fixed;
     inset: 0;
@@ -52,7 +51,6 @@
     100% { transform: translateY(-20vh) rotate(20deg); opacity: 0; }
   }
 
-  /* Nav */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -93,7 +91,6 @@
 
   .nav-cta:hover { background: var(--purple-light); transform: translateY(-1px); }
 
-  /* Hero */
   .hero {
     position: relative;
     z-index: 1;
@@ -170,7 +167,6 @@
     font-style: italic;
   }
 
-  /* Waitlist form */
   .waitlist {
     display: flex;
     gap: 0.75rem;
@@ -220,7 +216,6 @@
 
   .launch-note strong { color: var(--purple); }
 
-  /* What is section */
   .section {
     position: relative;
     z-index: 1;
@@ -254,7 +249,6 @@
     font-weight: 300;
   }
 
-  /* Cards */
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -288,7 +282,6 @@
     font-weight: 300;
   }
 
-  /* Why TearMate */
   .why-body {
     color: var(--muted);
     font-size: 1.05rem;
@@ -330,7 +323,6 @@
     font-weight: 400;
   }
 
-  /* Men's callout */
   .men-card {
     margin-top: 2.5rem;
     background: white;
@@ -366,7 +358,6 @@
 
   .men-card p:last-child { margin-bottom: 0; }
 
-  /* How it works */
   .steps {
     display: flex;
     flex-direction: column;
@@ -407,7 +398,6 @@
     font-weight: 300;
   }
 
-  /* Divider */
   .divider {
     width: 60px;
     height: 1.5px;
@@ -415,7 +405,6 @@
     margin: 0 auto;
   }
 
-  /* Founder note */
   .founder {
     position: relative;
     z-index: 1;
@@ -442,7 +431,6 @@
     text-transform: uppercase;
   }
 
-  /* CTA bottom */
   .cta-bottom {
     position: relative;
     z-index: 1;
@@ -462,7 +450,6 @@
     font-weight: 300;
   }
 
-  /* Footer */
   footer {
     position: relative;
     z-index: 1;
@@ -476,7 +463,6 @@
   footer a { color: var(--muted); text-decoration: none; }
   footer a:hover { color: var(--purple); }
 
-  /* Success message */
   .success {
     display: none;
     color: var(--purple);
@@ -499,88 +485,82 @@
 </head>
 <body>
 
-<!-- Floating hearts -->
 <div class="hearts-bg" id="hearts"></div>
 
-<!-- Nav -->
 <nav>
   <div class="logo"><span>💜</span> Withly</div>
   <a href="#waitlist" class="nav-cta">Get early access</a>
 </nav>
 
-<!-- Hero -->
 <section class="hero">
   <div class="hero-tag">Coming to iOS · Launching Soon</div>
   <span class="hero-emoji">💜</span>
-  <h1>You shouldn't have to<br><em>go through this alone</em></h1>
-  <p class="hero-sub">Not a therapist. Not a hotline. Just a kind, compassionate person who will sit with you — who just listens, doesn't judge, and helps you feel lighter.</p>
-  <p class="builder-note">Built by someone who knows what it feels like to need this<br>and lives with hope</p>
+  <h1>Find someone to<br><em>be with you</em></h1>
+  <p class="hero-sub">Not a therapist. Not a hotline. Just a kind, compassionate person who will sit with you — who listens without judgment and makes you feel less alone.</p>
+  <p class="builder-note">Built by a lonely, anxious, depressed man<br>who loves old money fashion and tech and lives with hope</p>
 
   <div class="waitlist" id="waitlist">
     <input type="email" id="emailInput" placeholder="Your email address" />
     <button onclick="handleSubmit()">Notify me at launch 💜</button>
   </div>
   <p class="success" id="successMsg">💜 You're on the list! We'll reach out when Withly goes live.</p>
-  <p class="launch-note">iOS launching soon · <strong>Free · Not for profit — to keep it genuine</strong></p>
+  <p class="launch-note">iOS launching soon · <strong>Free to use — helpers are compassionate volunteers</strong> · Not for profit — to keep it genuine</p>
 </section>
 
-<!-- What is it -->
 <section class="section">
   <p class="section-label">What is Withly?</p>
   <h2>Sometimes you just need someone to be there.</h2>
-  <p>Therapy is for healing. Friends are for celebrating. TearMate is for those quiet, heavy moments when you just need another human being to sit with you — no fixing required.</p>
+  <p>Therapy is for healing. Friends are for celebrating. Withly is for those quiet, heavy moments when you just need another human being to sit with you — no fixing required.</p>
 
   <div class="cards">
     <div class="card">
       <span class="card-icon">🤝</span>
       <h3>Real people</h3>
-      <p>Connect with compassionate volunteers in your area who genuinely want to help.</p>
+      <p>Connect with compassionate helpers in your area who genuinely want to be there for you.</p>
     </div>
     <div class="card">
-      <span class="card-icon">🛡️</span>
-      <h3>Safe & genuine</h3>
-      <p>Completely free. Verified, compassionate volunteers who show up because they genuinely want to help — not for payment.</p>
+      <span class="card-icon">⚡</span>
+      <h3>On demand</h3>
+      <p>Send a request and the first available helper nearby accepts. No scheduling. No waiting lists.</p>
     </div>
     <div class="card">
       <span class="card-icon">⭐</span>
-      <h3>Rated & reviewed</h3>
-      <p>Every helper is rated by the community. You can read reviews before you book.</p>
+      <h3>Trusted helpers</h3>
+      <p>Every helper is verified and rated by the community. You can see their reviews before they show up.</p>
     </div>
     <div class="card">
       <span class="card-icon">📍</span>
       <h3>Near you</h3>
-      <p>Find people nearby. Filter by distance. See who's available right now.</p>
+      <p>Helpers are real people in your area. They come to you. In person. That's the whole point.</p>
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- Why TearMate -->
 <section class="section why-section">
   <p class="section-label">Why Withly?</p>
   <div class="why-founder-block">
-    <p class="why-founder-text">Crying is not weakness — it's natural and necessary. But we were conditioned to stop. Somewhere between childhood and being called grown, we learned to hold it in.</p>
-    <p class="why-founder-text">And sometimes you can't even cry anymore. Not because you don't want to — because you are stuck so deep inside it, and you need someone to help you let it out.</p>
+    <p class="why-founder-text">There are moments when you don't need advice. You don't need a diagnosis. You don't need someone to fix you.</p>
+    <p class="why-founder-text">You just need another human being to be present. To sit with you in it. To not leave.</p>
     <p class="why-founder-text">And even when there <em>is</em> someone — a therapist, a friend, family — you don't say everything. Because you'll see them again. Because you don't want to look broken. Because the guilt comes later.</p>
-    <p class="why-founder-text">Not a therapist. Not a hotline. Just a kind, compassionate person who will sit with you — who just listens, doesn't judge, and helps you feel lighter.</p>
+    <p class="why-founder-text">Withly exists for that gap. A real person. No agenda. No follow-up. Just presence.</p>
     <p class="why-founder-text why-tried">I tried. I wish it works for you too.</p>
     <p class="why-founder-sig">— The founder</p>
   </div>
 
   <div class="men-card">
     <p class="men-card-label">For the men reading this</p>
-    <h3 class="men-card-title">It is okay to cry. It was always okay.</h3>
-    <p>Men are taught from childhood to collect it — every loss, every pain, every heavy moment — stored inside, never released. It builds. For years. For decades.</p>
-    <p>That weight doesn't disappear. It turns into anxiety, numbness, rage, or worse. Not because something is wrong with you. Because nobody ever told you that letting it out is strength, not weakness.</p>
-    <p>Men have tear glands too. You were built to cry. Withly is here for you too.</p>
-    <p><em>Never be afraid of your tears. Be proud of being natural.</em></p>
+    <h3 class="men-card-title">You don't have to carry it alone.</h3>
+    <p>Men are taught from childhood to collect it — every loss, every pain, every heavy moment — stored inside, never shared. It builds. For years. For decades.</p>
+    <p>That weight doesn't disappear. It turns into anxiety, numbness, rage, or worse. Not because something is wrong with you. Because nobody ever told you that reaching out is strength, not weakness.</p>
+    <p>Withly is here for you too. No judgment. No labels. Just someone who will show up.</p>
+    <p><em>Never be afraid of needing someone. It's the most human thing there is.</em></p>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- How it works -->
 <section class="section">
   <p class="section-label">How it works</p>
   <h2>Three steps to not being alone.</h2>
@@ -590,40 +570,38 @@
       <div class="step-num">1</div>
       <div class="step-text">
         <h4>Open the app</h4>
-        <p>Sign up with your phone number. Takes 30 seconds. No profile photo required.</p>
+        <p>Sign up with your phone number. Takes 30 seconds.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-text">
-        <h4>Find a helper nearby</h4>
-        <p>Browse compassionate people in your area. Read their reviews. See their availability.</p>
+        <h4>Send a request</h4>
+        <p>Tap "I need someone". Nearby helpers are notified instantly. The first one to accept comes to you.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-text">
-        <h4>Someone shows up for you</h4>
-        <p>That's it. A real human comes to be with you. No advice unless you ask. Just presence. Completely free.</p>
+        <h4>A real person shows up</h4>
+        <p>No advice unless you ask. No judgment. Just presence. You end the session whenever you're ready.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">💜</div>
       <div class="step-text">
         <h4>Want to be a helper?</h4>
-        <p>If you're a good listener and want to help others, sign up as a helper in the app. Make someone's day a little less lonely.</p>
+        <p>If you're a good listener and want to be there for others, sign up as a helper in the app. Make someone's day a little less lonely.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Founder note -->
 <div class="founder">
   <blockquote>"I'm lonely, no friends, no close family, no relationship. I built this because I needed it myself — but I believe a lot of others need it too."</blockquote>
   <p class="founder-credit">— Hareesh, founder of Withly</p>
 </div>
 
-<!-- Bottom CTA -->
 <section class="cta-bottom">
   <h2>Join the waitlist.</h2>
   <p>We'll let you know the moment Withly is live on iOS.</p>
@@ -634,13 +612,11 @@
   <p class="success" id="successMsg2">💜 You're on the list!</p>
 </section>
 
-<!-- Footer -->
 <footer>
-  <p>💜 Withly · Built with care · hareesh.io@proton.me &nbsp;|&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="refund.html">No Payment Policy</a></p>
+  <p>💜 Withly · Built with care · hareesh.io@proton.me &nbsp;|&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="refund.html">Refund Policy</a></p>
 </footer>
 
 <script>
-  // Floating hearts
   const heartsContainer = document.getElementById('hearts');
   const heartChars = ['💜', '🤍', '💙', '🩵'];
 
