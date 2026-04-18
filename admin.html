@@ -21,16 +21,15 @@
   }
   body { font-family: system-ui, sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; }
 
-  /* ── Auth screen ── */
   #auth-screen {
     display: flex; align-items: center; justify-content: center; min-height: 100vh;
   }
   .auth-card {
     background: var(--surface); border-radius: 16px; padding: 40px;
-    width: 360px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    width: 360px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center;
   }
   .auth-card h1 { font-size: 1.5rem; margin-bottom: 8px; }
-  .auth-card p { color: var(--muted); font-size: 0.875rem; margin-bottom: 24px; }
+  .auth-card p { color: var(--muted); font-size: 0.875rem; margin-bottom: 28px; }
   .auth-card input {
     width: 100%; border: 1.5px solid var(--border); border-radius: 8px;
     padding: 10px 14px; font-size: 0.9rem; margin-bottom: 12px; outline: none;
@@ -38,18 +37,22 @@
   }
   .auth-card input:focus { border-color: var(--purple); }
   .btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 18px; border-radius: 8px; font-size: 0.875rem;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px; border-radius: 8px; font-size: 0.9rem;
     font-weight: 600; cursor: pointer; border: none; transition: opacity 0.15s;
+    text-decoration: none;
   }
   .btn:hover { opacity: 0.85; }
-  .btn-primary { background: var(--purple); color: #fff; width: 100%; justify-content: center; }
+  .btn-google {
+    background: #fff; color: #1a1523; border: 1.5px solid var(--border);
+    width: 100%; justify-content: center; font-size: 0.95rem;
+  }
+  .btn-primary { background: var(--purple); color: #fff; }
   .btn-danger  { background: var(--red); color: #fff; }
   .btn-success { background: var(--green); color: #fff; }
   .btn-muted   { background: var(--border); color: var(--dark); }
-  #auth-error  { color: var(--red); font-size: 0.8rem; margin-top: 8px; min-height: 18px; }
+  #auth-error  { color: var(--red); font-size: 0.8rem; margin-top: 12px; min-height: 18px; }
 
-  /* ── Shell ── */
   #app { display: none; min-height: 100vh; }
   .topbar {
     background: var(--surface); border-bottom: 1px solid var(--border);
@@ -63,7 +66,7 @@
 
   .layout { display: flex; min-height: calc(100vh - 56px); }
   .sidebar {
-    width: 200px; background: var(--surface); border-right: 1px solid var(--border);
+    width: 210px; background: var(--surface); border-right: 1px solid var(--border);
     padding: 20px 12px; display: flex; flex-direction: column; gap: 4px;
     position: sticky; top: 56px; height: calc(100vh - 56px);
   }
@@ -110,10 +113,9 @@
 
   .avatar {
     width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
-    background: var(--purple-soft); display: inline-block;
+    background: var(--purple-soft); display: inline-block; vertical-align: middle;
   }
   .selfie-link { color: var(--purple); text-decoration: underline; font-size: 0.8rem; }
-
   .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .empty { color: var(--muted); text-align: center; padding: 40px; }
   .loading { color: var(--muted); padding: 20px; }
@@ -129,14 +131,9 @@
     width: 480px; max-width: 95vw; max-height: 80vh; overflow-y: auto;
   }
   .modal h3 { font-size: 1.1rem; margin-bottom: 16px; }
-  .modal-close { float: right; cursor: pointer; font-size: 1.2rem; color: var(--muted); }
+  .modal-close { float: right; cursor: pointer; font-size: 1.2rem; color: var(--muted); background: none; border: none; }
   .detail-row { margin-bottom: 10px; font-size: 0.875rem; }
-  .detail-row span { color: var(--muted); }
-
-  @media (max-width: 640px) {
-    .sidebar { display: none; }
-    .main { padding: 16px; }
-  }
+  .detail-row span { color: var(--muted); margin-right: 6px; }
 </style>
 </head>
 <body>
@@ -145,10 +142,10 @@
 <div id="auth-screen">
   <div class="auth-card">
     <h1>Withly Admin</h1>
-    <p>Sign in with your admin account</p>
-    <input type="email" id="email-input" placeholder="Email" />
-    <input type="password" id="password-input" placeholder="Password" />
-    <button class="btn btn-primary" onclick="signIn()">Sign in</button>
+    <p>Admin access only.</p>
+    <input type="email" id="email-input" placeholder="Email" autocomplete="email" />
+    <input type="password" id="password-input" placeholder="Password" autocomplete="current-password" />
+    <button class="btn btn-primary" onclick="doSignIn()">Sign in</button>
     <div id="auth-error"></div>
   </div>
 </div>
@@ -159,7 +156,7 @@
     <span class="topbar-brand">Withly Admin</span>
     <div class="topbar-right">
       <span class="topbar-email" id="user-email"></span>
-      <button class="btn btn-muted" onclick="signOut()">Sign out</button>
+      <button class="btn btn-muted" onclick="doSignOut()">Sign out</button>
     </div>
   </div>
   <div class="layout">
@@ -175,79 +172,67 @@
       </div>
     </nav>
     <main class="main">
-
-      <!-- Verifications -->
       <div class="page active" id="page-verifications">
         <h2>Helper Verifications</h2>
         <div id="verifications-content"><div class="loading">Loading…</div></div>
       </div>
-
-      <!-- Reports -->
       <div class="page" id="page-reports">
         <h2>User Reports</h2>
         <div id="reports-content"><div class="loading">Loading…</div></div>
       </div>
-
-      <!-- Users -->
       <div class="page" id="page-users">
         <h2>All Users</h2>
         <div id="users-content"><div class="loading">Loading…</div></div>
       </div>
-
     </main>
   </div>
 </div>
 
 <!-- Detail modal -->
-<div class="modal-overlay" id="detail-modal">
+<div class="modal-overlay" id="detail-modal" onclick="handleOverlayClick(event)">
   <div class="modal">
-    <span class="modal-close" onclick="closeModal()">✕</span>
+    <button class="modal-close" onclick="closeModal()">✕</button>
     <div id="modal-body"></div>
   </div>
 </div>
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {
-  getAuth, signInWithEmailAndPassword, signOut as fbSignOut, onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import {
-  getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, orderBy, limit
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { initializeApp }        from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc, orderBy, limit }
+  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAzgmWSRvpGxIk3GzxcGNkGE82IyZoKRUo',
-  authDomain: 'tearmate-3a101.firebaseapp.com',
-  projectId: 'tearmate-3a101',
-  storageBucket: 'tearmate-3a101.firebasestorage.app',
+const app  = initializeApp({
+  apiKey:            'AIzaSyAzgmWSRvpGxIk3GzxcGNkGE82IyZoKRUo',
+  authDomain:        'tearmate-3a101.firebaseapp.com',
+  projectId:         'tearmate-3a101',
+  storageBucket:     'tearmate-3a101.firebasestorage.app',
   messagingSenderId: '855013076047',
-  appId: '1:855013076047:ios:ed95cb4892fe5817b38e3a',
-  databaseURL: 'https://tearmate-3a101-default-rtdb.firebaseio.com/',
-};
-
-const app = initializeApp(firebaseConfig);
+  appId:             '1:855013076047:ios:ed95cb4892fe5817b38e3a',
+  databaseURL:       'https://tearmate-3a101-default-rtdb.firebaseio.com/',
+});
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db   = getFirestore(app);
 
-// ── Auth ─────────────────────────────────────────────────────────────────────
-window.signIn = async () => {
+// ── Auth ──────────────────────────────────────────────────────────────────────
+window.doSignIn = async () => {
   const email = document.getElementById('email-input').value.trim();
   const pass  = document.getElementById('password-input').value;
   document.getElementById('auth-error').textContent = '';
   try {
     await signInWithEmailAndPassword(auth, email, pass);
   } catch (e) {
-    document.getElementById('auth-error').textContent = e.message;
+    document.getElementById('auth-error').textContent = 'Invalid email or password.';
   }
 };
-
-window.signOut = async () => {
-  await fbSignOut(auth);
-};
-
-document.getElementById('password-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') window.signIn();
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('password-input')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.doSignIn();
+  });
 });
+
+window.doSignOut = () => signOut(auth);
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -255,16 +240,17 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('app').style.display = 'none';
     return;
   }
-  // Check isAdmin
+  // Check isAdmin on Firestore user doc
   const userDoc = await getDoc(doc(db, 'users', user.uid));
   if (!userDoc.exists() || !userDoc.data().isAdmin) {
-    await fbSignOut(auth);
-    document.getElementById('auth-error').textContent = 'Not authorised as admin.';
+    await signOut(auth);
+    document.getElementById('auth-error').textContent =
+      'Access denied. Your account does not have admin privileges.';
     return;
   }
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('user-email').textContent = user.email;
+  document.getElementById('user-email').textContent = user.email || user.displayName;
   loadAll();
 });
 
@@ -276,12 +262,11 @@ window.showPage = (name) => {
   document.querySelector(`[data-page="${name}"]`).classList.add('active');
 };
 
-window.closeModal = () => {
-  document.getElementById('detail-modal').classList.remove('open');
-};
+window.closeModal = () => document.getElementById('detail-modal').classList.remove('open');
+window.handleOverlayClick = (e) => { if (e.target === e.currentTarget) closeModal(); };
 
-// ── Load all data ─────────────────────────────────────────────────────────────
-async function loadAll() {
+// ── Load all ──────────────────────────────────────────────────────────────────
+function loadAll() {
   loadVerifications();
   loadReports();
   loadUsers();
@@ -289,52 +274,60 @@ async function loadAll() {
 
 // ── Verifications ─────────────────────────────────────────────────────────────
 async function loadVerifications() {
-  const snap = await getDocs(query(
-    collection(db, 'helperProfiles'),
-    where('verificationStatus', '==', 'pending'),
-    where('selfieUrl', '!=', ''),
-  ));
+  try {
+    const snap = await getDocs(query(
+      collection(db, 'helperProfiles'),
+      where('verificationStatus', '==', 'pending'),
+    ));
 
-  const badge = document.getElementById('badge-verifications');
-  badge.textContent = snap.size;
-  badge.style.display = snap.size > 0 ? 'inline' : 'none';
+    // Client-side filter: only those with selfieUrl
+    const pending = snap.docs.filter(d => d.data().selfieUrl);
 
-  if (snap.empty) {
-    document.getElementById('verifications-content').innerHTML = '<div class="empty">No pending verifications 🎉</div>';
-    return;
+    const badge = document.getElementById('badge-verifications');
+    badge.textContent = pending.length;
+    badge.style.display = pending.length > 0 ? 'inline' : 'none';
+
+    if (pending.length === 0) {
+      document.getElementById('verifications-content').innerHTML =
+        '<div class="empty">No pending verifications 🎉</div>';
+      return;
+    }
+
+    const rows = await Promise.all(pending.map(async (d) => {
+      const hp = d.data();
+      const userSnap = await getDoc(doc(db, 'users', hp.uid));
+      return { hp, user: userSnap.exists() ? userSnap.data() : {} };
+    }));
+
+    document.getElementById('verifications-content').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Photo</th><th>Name</th><th>Phone</th><th>Selfie</th><th>Actions</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(({ hp, user }) => `
+            <tr>
+              <td>${user.photo ? `<img class="avatar" src="${user.photo}" />` : '<div class="avatar"></div>'}</td>
+              <td>${esc(user.name)}</td>
+              <td>${esc(user.phoneNumber)}</td>
+              <td>${hp.selfieUrl
+                ? `<a class="selfie-link" href="${hp.selfieUrl}" target="_blank">View ↗</a>`
+                : '—'}</td>
+              <td>
+                <div class="action-row">
+                  <button class="btn btn-success" onclick="approveHelper('${hp.uid}')">Approve</button>
+                  <button class="btn btn-danger"  onclick="rejectHelper('${hp.uid}')">Reject</button>
+                  <button class="btn btn-muted"   onclick="viewUser('${hp.uid}')">Details</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } catch (e) {
+    document.getElementById('verifications-content').innerHTML =
+      `<div class="empty">Error loading verifications: ${e.message}</div>`;
   }
-
-  const rows = await Promise.all(snap.docs.map(async (d) => {
-    const hp = d.data();
-    const userSnap = await getDoc(doc(db, 'users', hp.uid));
-    const user = userSnap.exists() ? userSnap.data() : {};
-    return { hp, user };
-  }));
-
-  document.getElementById('verifications-content').innerHTML = `
-    <table>
-      <thead><tr>
-        <th>Photo</th><th>Name</th><th>Phone</th><th>Selfie</th><th>Status</th><th>Actions</th>
-      </tr></thead>
-      <tbody>
-        ${rows.map(({ hp, user }) => `
-          <tr>
-            <td>${user.photo ? `<img class="avatar" src="${user.photo}" />` : '<div class="avatar"></div>'}</td>
-            <td>${user.name || '—'}</td>
-            <td>${user.phoneNumber || '—'}</td>
-            <td>${hp.selfieUrl ? `<a class="selfie-link" href="${hp.selfieUrl}" target="_blank">View selfie ↗</a>` : '—'}</td>
-            <td><span class="pill pill-pending">Pending</span></td>
-            <td>
-              <div class="action-row">
-                <button class="btn btn-success" onclick="approveHelper('${hp.uid}')">Approve</button>
-                <button class="btn btn-danger"  onclick="rejectHelper('${hp.uid}')">Reject</button>
-                <button class="btn btn-muted"   onclick="viewUser('${hp.uid}')">Details</button>
-              </div>
-            </td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>`;
 }
 
 window.approveHelper = async (uid) => {
@@ -352,65 +345,79 @@ window.rejectHelper = async (uid) => {
 
 // ── Reports ───────────────────────────────────────────────────────────────────
 async function loadReports() {
-  const snap = await getDocs(query(
-    collection(db, 'reports'),
-    where('reviewed', '==', false),
-    orderBy('createdAt', 'desc'),
-  ));
+  try {
+    // Simple query — no compound index needed; sort client-side
+    const snap = await getDocs(query(
+      collection(db, 'reports'),
+      where('reviewed', '==', false),
+    ));
 
-  const badge = document.getElementById('badge-reports');
-  badge.textContent = snap.size;
-  badge.style.display = snap.size > 0 ? 'inline' : 'none';
+    const reports = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-  if (snap.empty) {
-    document.getElementById('reports-content').innerHTML = '<div class="empty">No open reports 🎉</div>';
-    return;
+    const badge = document.getElementById('badge-reports');
+    badge.textContent = reports.length;
+    badge.style.display = reports.length > 0 ? 'inline' : 'none';
+
+    if (reports.length === 0) {
+      document.getElementById('reports-content').innerHTML =
+        '<div class="empty">No open reports 🎉</div>';
+      return;
+    }
+
+    const rows = await Promise.all(reports.map(async (r) => {
+      const [repSnap, repedSnap] = await Promise.all([
+        getDoc(doc(db, 'users', r.reporterId)),
+        getDoc(doc(db, 'users', r.reportedId)),
+      ]);
+      return {
+        ...r,
+        reporterName: repSnap.exists() ? repSnap.data().name : r.reporterId,
+        reportedName: repedSnap.exists() ? repedSnap.data().name : r.reportedId,
+      };
+    }));
+
+    document.getElementById('reports-content').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Date</th><th>Reporter</th><th>Reported</th><th>Reason</th><th>Actions</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '—'}</td>
+              <td>${esc(r.reporterName)}</td>
+              <td>${esc(r.reportedName)}</td>
+              <td>${esc(r.reason)}</td>
+              <td>
+                <div class="action-row">
+                  <button class="btn btn-muted"
+                    onclick="viewReport('${r.id}','${esc(r.reportedName)}','${esc(r.reason)}','${esc(r.details)}','${r.reportedId}')">
+                    View
+                  </button>
+                  <button class="btn btn-success" onclick="markReviewed('${r.id}')">Dismiss</button>
+                  <button class="btn btn-danger"  onclick="suspendUser('${r.reportedId}','${r.id}')">Suspend</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } catch (e) {
+    document.getElementById('reports-content').innerHTML =
+      `<div class="empty">Error loading reports: ${e.message}</div>`;
   }
-
-  const rows = await Promise.all(snap.docs.map(async (d) => {
-    const r = { id: d.id, ...d.data() };
-    const [repSnap, repedSnap] = await Promise.all([
-      getDoc(doc(db, 'users', r.reporterId)),
-      getDoc(doc(db, 'users', r.reportedId)),
-    ]);
-    r.reporterName = repSnap.exists() ? repSnap.data().name : r.reporterId;
-    r.reportedName = repedSnap.exists() ? repedSnap.data().name : r.reportedId;
-    return r;
-  }));
-
-  document.getElementById('reports-content').innerHTML = `
-    <table>
-      <thead><tr>
-        <th>Date</th><th>Reporter</th><th>Reported</th><th>Reason</th><th>Status</th><th>Actions</th>
-      </tr></thead>
-      <tbody>
-        ${rows.map(r => `
-          <tr>
-            <td>${new Date(r.createdAt).toLocaleDateString()}</td>
-            <td>${r.reporterName}</td>
-            <td>${r.reportedName}</td>
-            <td>${r.reason}</td>
-            <td><span class="pill pill-open">Open</span></td>
-            <td>
-              <div class="action-row">
-                <button class="btn btn-muted" onclick="viewReport('${r.id}', '${escHtml(r.reportedName)}', '${escHtml(r.reason)}', '${escHtml(r.details || '')}')">View</button>
-                <button class="btn btn-success" onclick="markReviewed('${r.id}')">Dismiss</button>
-                <button class="btn btn-danger"  onclick="suspendUser('${r.reportedId}', '${r.id}')">Suspend</button>
-              </div>
-            </td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>`;
 }
 
-window.viewReport = (id, name, reason, details) => {
+window.viewReport = (id, name, reason, details, reportedId) => {
   document.getElementById('modal-body').innerHTML = `
     <h3>Report — ${name}</h3>
     <div class="detail-row"><span>Reason:</span> ${reason}</div>
     <div class="detail-row"><span>Details:</span> ${details || 'None provided'}</div>
-    <div style="margin-top:16px; display:flex; gap:8px;">
-      <button class="btn btn-success" onclick="markReviewed('${id}'); closeModal()">Dismiss</button>
+    <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-success" onclick="markReviewed('${id}');closeModal()">Dismiss</button>
+      <button class="btn btn-danger"  onclick="suspendUser('${reportedId}','${id}');closeModal()">Suspend user</button>
       <button class="btn btn-muted"   onclick="closeModal()">Close</button>
     </div>`;
   document.getElementById('detail-modal').classList.add('open');
@@ -422,7 +429,7 @@ window.markReviewed = async (reportId) => {
 };
 
 window.suspendUser = async (uid, reportId) => {
-  if (!confirm('Suspend this user? They will not be able to use the app.')) return;
+  if (!confirm('Suspend this user?')) return;
   await updateDoc(doc(db, 'users', uid), { isSuspended: true });
   await updateDoc(doc(db, 'reports', reportId), { reviewed: true, reviewedAt: Date.now(), action: 'suspended' });
   loadReports();
@@ -431,54 +438,59 @@ window.suspendUser = async (uid, reportId) => {
 
 // ── Users ─────────────────────────────────────────────────────────────────────
 async function loadUsers() {
-  const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'), limit(100)));
-  if (snap.empty) {
-    document.getElementById('users-content').innerHTML = '<div class="empty">No users found.</div>';
-    return;
-  }
-  const users = snap.docs.map(d => d.data());
+  try {
+    const snap = await getDocs(query(
+      collection(db, 'users'),
+      orderBy('createdAt', 'desc'),
+      limit(200),
+    ));
 
-  const total = users.length;
-  const helpers = users.filter(u => u.role === 'helper').length;
-  const seekers = users.filter(u => u.role === 'seeker').length;
-  const suspended = users.filter(u => u.isSuspended).length;
+    const users = snap.docs.map(d => d.data());
+    const total     = users.length;
+    const helpers   = users.filter(u => u.role === 'helper').length;
+    const seekers   = users.filter(u => u.role === 'seeker').length;
+    const suspended = users.filter(u => u.isSuspended).length;
 
-  document.getElementById('users-content').innerHTML = `
-    <div class="stat-row">
-      <div class="stat-card"><div class="label">Total</div><div class="value">${total}</div></div>
-      <div class="stat-card"><div class="label">Helpers</div><div class="value">${helpers}</div></div>
-      <div class="stat-card"><div class="label">Seekers</div><div class="value">${seekers}</div></div>
-      <div class="stat-card"><div class="label">Suspended</div><div class="value" style="color:var(--red)">${suspended}</div></div>
-    </div>
-    <table>
-      <thead><tr>
-        <th>Photo</th><th>Name</th><th>Role</th><th>Joined</th><th>Rating</th><th>Status</th><th>Actions</th>
-      </tr></thead>
-      <tbody>
-        ${users.map(u => `
-          <tr>
-            <td>${u.photo ? `<img class="avatar" src="${u.photo}" />` : '<div class="avatar"></div>'}</td>
-            <td>${u.name || '—'}</td>
-            <td>${u.role || '—'}</td>
-            <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '—'}</td>
-            <td>${u.averageRating ? '⭐ ' + u.averageRating.toFixed(1) : '—'}</td>
-            <td>
-              ${u.isSuspended
-                ? '<span class="pill pill-rejected">Suspended</span>'
-                : '<span class="pill pill-approved">Active</span>'}
-            </td>
-            <td>
-              <div class="action-row">
-                <button class="btn btn-muted" onclick="viewUser('${u.uid}')">Details</button>
+    document.getElementById('users-content').innerHTML = `
+      <div class="stat-row">
+        <div class="stat-card"><div class="label">Total</div><div class="value">${total}</div></div>
+        <div class="stat-card"><div class="label">Helpers</div><div class="value">${helpers}</div></div>
+        <div class="stat-card"><div class="label">Seekers</div><div class="value">${seekers}</div></div>
+        <div class="stat-card"><div class="label">Suspended</div><div class="value" style="color:var(--red)">${suspended}</div></div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Photo</th><th>Name</th><th>Role</th><th>Joined</th><th>Rating</th><th>Status</th><th>Actions</th>
+        </tr></thead>
+        <tbody>
+          ${users.map(u => `
+            <tr>
+              <td>${u.photo ? `<img class="avatar" src="${u.photo}" />` : '<div class="avatar"></div>'}</td>
+              <td>${esc(u.name)}</td>
+              <td>${u.role || '—'}</td>
+              <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '—'}</td>
+              <td>${u.averageRating ? '⭐ ' + Number(u.averageRating).toFixed(1) : '—'}</td>
+              <td>
                 ${u.isSuspended
-                  ? `<button class="btn btn-success" onclick="unsuspendUser('${u.uid}')">Unsuspend</button>`
-                  : `<button class="btn btn-danger"  onclick="suspendUserDirect('${u.uid}')">Suspend</button>`}
-              </div>
-            </td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>`;
+                  ? '<span class="pill pill-rejected">Suspended</span>'
+                  : '<span class="pill pill-approved">Active</span>'}
+              </td>
+              <td>
+                <div class="action-row">
+                  <button class="btn btn-muted" onclick="viewUser('${u.uid}')">Details</button>
+                  ${u.isSuspended
+                    ? `<button class="btn btn-success" onclick="unsuspendUser('${u.uid}')">Unsuspend</button>`
+                    : `<button class="btn btn-danger"  onclick="suspendUserDirect('${u.uid}')">Suspend</button>`}
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } catch (e) {
+    document.getElementById('users-content').innerHTML =
+      `<div class="empty">Error loading users: ${e.message}</div>`;
+  }
 }
 
 window.viewUser = async (uid) => {
@@ -486,28 +498,35 @@ window.viewUser = async (uid) => {
     getDoc(doc(db, 'users', uid)),
     getDoc(doc(db, 'helperProfiles', uid)),
   ]);
-  const u = userSnap.exists() ? userSnap.data() : {};
+  const u  = userSnap.exists() ? userSnap.data() : {};
   const hp = hpSnap.exists() ? hpSnap.data() : null;
 
   document.getElementById('modal-body').innerHTML = `
-    <h3>${u.name || 'Unknown'}</h3>
-    ${u.photo ? `<img src="${u.photo}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:12px;" />` : ''}
+    <h3>${esc(u.name) || 'Unknown'}</h3>
+    ${u.photo ? `<img src="${u.photo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin-bottom:14px;" />` : ''}
     <div class="detail-row"><span>UID:</span> ${uid}</div>
-    <div class="detail-row"><span>Phone:</span> ${u.phoneNumber || '—'}</div>
+    <div class="detail-row"><span>Phone:</span> ${esc(u.phoneNumber)}</div>
     <div class="detail-row"><span>Role:</span> ${u.role || '—'}</div>
     <div class="detail-row"><span>DOB:</span> ${u.dateOfBirth || '—'}</div>
     <div class="detail-row"><span>Sessions:</span> ${u.totalSessions || 0}</div>
-    <div class="detail-row"><span>Rating:</span> ${u.averageRating ? u.averageRating.toFixed(1) : '—'}</div>
+    <div class="detail-row"><span>Rating:</span> ${u.averageRating ? Number(u.averageRating).toFixed(1) : '—'}</div>
     <div class="detail-row"><span>Suspended:</span> ${u.isSuspended ? '⛔ Yes' : 'No'}</div>
     ${hp ? `
-    <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border);">
-      <strong>Helper Profile</strong>
-      <div class="detail-row"><span>Verification:</span> <span class="pill pill-${hp.verificationStatus}">${hp.verificationStatus}</span></div>
-      <div class="detail-row"><span>Available now:</span> ${hp.isAvailableNow ? '🟢 Yes' : '⚫ No'}</div>
-      <div class="detail-row"><span>Reviews:</span> ${hp.totalReviews || 0}</div>
-      ${hp.selfieUrl ? `<div class="detail-row"><a class="selfie-link" href="${hp.selfieUrl}" target="_blank">View verification selfie ↗</a></div>` : ''}
-    </div>` : ''}
-    <div style="margin-top:16px;">
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <strong>Helper Profile</strong><br><br>
+        <div class="detail-row"><span>Verification:</span>
+          <span class="pill pill-${hp.verificationStatus}">${hp.verificationStatus}</span>
+        </div>
+        <div class="detail-row"><span>Available now:</span> ${hp.isAvailableNow ? '🟢 Yes' : '⚫ No'}</div>
+        <div class="detail-row"><span>Reviews:</span> ${hp.totalReviews || 0}</div>
+        ${hp.selfieUrl
+          ? `<div class="detail-row"><a class="selfie-link" href="${hp.selfieUrl}" target="_blank">View selfie ↗</a></div>`
+          : ''}
+      </div>` : ''}
+    <div style="margin-top:18px;display:flex;gap:8px;">
+      ${u.isSuspended
+        ? `<button class="btn btn-success" onclick="unsuspendUser('${uid}');closeModal()">Unsuspend</button>`
+        : `<button class="btn btn-danger"  onclick="suspendUserDirect('${uid}');closeModal()">Suspend</button>`}
       <button class="btn btn-muted" onclick="closeModal()">Close</button>
     </div>`;
   document.getElementById('detail-modal').classList.add('open');
@@ -525,15 +544,10 @@ window.suspendUserDirect = async (uid) => {
   loadUsers();
 };
 
-// ── Util ─────────────────────────────────────────────────────────────────────
-function escHtml(str) {
-  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// ── Util ──────────────────────────────────────────────────────────────────────
+function esc(str) {
+  return (str || '—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-
-// Close modal on overlay click
-document.getElementById('detail-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
 </script>
 </body>
 </html>
