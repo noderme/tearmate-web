@@ -330,16 +330,33 @@ async function loadVerifications() {
   }
 }
 
+async function sendPushToUser(uid, title, body) {
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    const token = snap.exists() ? snap.data().expoPushToken : null;
+    if (!token) return;
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to: token, title, body, sound: 'default' }),
+    });
+  } catch (e) {
+    console.warn('Push failed:', e);
+  }
+}
+
 window.approveHelper = async (uid) => {
   if (!confirm('Approve this helper?')) return;
-  await updateDoc(doc(db, 'helperProfiles', uid), { verificationStatus: 'approved' });
+  await updateDoc(doc(db, 'helperProfiles', uid), { verificationStatus: 'verified' });
   await updateDoc(doc(db, 'users', uid), { isVerified: true });
+  await sendPushToUser(uid, 'Identity verified ✓', 'Your profile is now verified. Seekers can see your verified badge.');
   loadVerifications();
 };
 
 window.rejectHelper = async (uid) => {
   if (!confirm('Reject this helper?')) return;
-  await updateDoc(doc(db, 'helperProfiles', uid), { verificationStatus: 'rejected' });
+  await updateDoc(doc(db, 'helperProfiles', uid), { verificationStatus: 'rejected', selfieUrl: null });
+  await sendPushToUser(uid, 'Verification unsuccessful', 'We could not verify your identity. Please submit a clearer selfie.');
   loadVerifications();
 };
 
